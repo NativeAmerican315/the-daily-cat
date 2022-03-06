@@ -2,10 +2,10 @@ import discord
 from discord.ext import commands
 import os, random, asyncio
 
-token = "OTI0MDEyOTM5MzM2Mzg0NTI0.YcYYHA.BDSc9zpiEnnvfv4rzxwng-sAAXI"
-dailyCat = 915717908364140615
-dailyCatTest = 933913839135780956
-cuteCats = "C:/Users/ADRIAN/Desktop/TheDailyCat/cats"
+token = "your bot token here"
+dailyCat = "your main channel id here"
+dailyCatTest = "your test server channel id here"
+cuteCats = "directory that holds all of the cat photos"
 
 random_filename = random.choice([
     x for x in os.listdir(cuteCats)
@@ -22,8 +22,8 @@ async def send_daily():
             x for x in os.listdir(cuteCats)
             if os.path.isfile(os.path.join(cuteCats, x))
         ])
-        file = discord.File("C:/Users/ADRIAN/Desktop/TheDailyCat/cats/"+random_filename)
-        await channel.send(file=file, content="<@&915717948046463098> here is your cat")
+        file = discord.File(cuteCats+random_filename)
+        await channel.send(file=file, content="<@&your role id here> here is your cat")
         print('sent daily')
         await asyncio.sleep(86400)
 
