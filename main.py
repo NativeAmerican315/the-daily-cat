@@ -29,6 +29,20 @@ async def send_daily():
             x for x in os.listdir(cuteCats)
             if os.path.isfile(os.path.join(cuteCats, x))
         ])
+        previous = await channel.history().flatten()
+        for i in range(len(previous) + 1):
+            currentMessage = previous[i]
+            if currentMessage.author.bot == True:
+                attachment = currentMessage.attachments
+                if attachment[0].filename == random_filename:
+                    random_filename = random.choice([
+                        x for x in os.listdir(cuteCats)
+                        if os.path.isfile(os.path.join(cuteCats, x))
+                    ])
+                else:
+                    break
+            else:
+                continue
         file = discord.File(cuteCats+random_filename) #get the file
         await channel.send(file=file, content="<@&your role id here> here is your cat") #and print the message
         print('sent daily') #make a note to the bot that it sent the daily
