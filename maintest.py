@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-import os, random, asyncio, telegram_send
+import os, random, asyncio
 
 #variables
 token = "your bot token here"
@@ -25,10 +25,27 @@ async def send_daily():
             x for x in os.listdir(cuteCats)
             if os.path.isfile(os.path.join(cuteCats, x))
         ])
+        previous = await channel.history().flatten()
+        for i in range(len(previous) + 1):
+            currentMessage = previous[i]
+            if currentMessage.author.bot == True:
+                attachment = currentMessage.attachments
+                if attachment[0].filename == random_filename:
+                    random_filename = random.choice([
+                        x for x in os.listdir(cuteCats)
+                        if os.path.isfile(os.path.join(cuteCats, x))
+                    ])
+                else:
+                    break
+            else:
+                continue
         file = discord.File(cuteCats+random_filename)
         await channel.send(file=file, content="<@&your role id here> here is your cat")
+        if os.path.exists(file):
+            os.remove(file)
+        else:
+            print("the file has either already been deleted, or it broke, and the program can't read the file.")
         print('sent daily')
-        telegram_send.send(messages=["Sent Daily"])
         await asyncio.sleep(86400)
 
 client.loop.create_task(send_daily()) #make it loop
