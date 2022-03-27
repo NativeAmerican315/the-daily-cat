@@ -4,14 +4,15 @@ import os, random, asyncio
 
 #variables
 token = "your bot token here"
-dailyCat = "your main channel id here"
-dailyCatTest = "your test server channel id here"
-cuteCats = "directory that holds all of the cat photos"
+dailyCat = yourMainChanelIdHere
+dailyCatTest = yourChannelIdHere
+cuteCats = "your main directory here"
+cuteCatsTest = "your directory here"
 
 #random file
 random_filename = random.choice([
-    x for x in os.listdir(cuteCats)
-    if os.path.isfile(os.path.join(cuteCats, x))
+    x for x in os.listdir(cuteCatsTest)
+    if os.path.isfile(os.path.join(cuteCatsTest, x))
 ])
 
 client = commands.Bot(command_prefix = ":3 ")
@@ -22,8 +23,8 @@ async def send_daily():
     channel = client.get_channel(dailyCatTest)
     while not client.is_closed():
         random_filename = random.choice([
-            x for x in os.listdir(cuteCats)
-            if os.path.isfile(os.path.join(cuteCats, x))
+            x for x in os.listdir(cuteCatsTest)
+            if os.path.isfile(os.path.join(cuteCatsTest, x))
         ])
         previous = await channel.history().flatten()
         for i in range(len(previous) + 1):
@@ -32,21 +33,23 @@ async def send_daily():
                 attachment = currentMessage.attachments
                 if attachment[0].filename == random_filename:
                     random_filename = random.choice([
-                        x for x in os.listdir(cuteCats)
-                        if os.path.isfile(os.path.join(cuteCats, x))
+                        x for x in os.listdir(cuteCatsTest)
+                        if os.path.isfile(os.path.join(cuteCatsTest, x))
                     ])
                 else:
                     break
             else:
                 continue
-        file = discord.File(cuteCats+random_filename)
+
+        file = discord.File(cuteCatsTest+random_filename)
+        fileRoot = cuteCatsTest+random_filename
         await channel.send(file=file, content="<@&your role id here> here is your cat")
-        if os.path.exists(file):
-            os.remove(file)
+        if os.path.exists(fileRoot):
+            os.remove(fileRoot)
         else:
             print("the file has either already been deleted, or it broke, and the program can't read the file.")
         print('sent daily')
-        await asyncio.sleep(86400)
+        await asyncio.sleep(10)
 
 client.loop.create_task(send_daily()) #make it loop
 
